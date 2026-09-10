@@ -28,7 +28,6 @@ from rouge_score import rouge_scorer
 
 from agent.client import call_agent
 from agent.schema import RunResult
-from runner.cache import load_run
 
 logger = logging.getLogger(__name__)
 

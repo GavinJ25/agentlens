@@ -214,11 +214,29 @@ def _run_group4(
             logger.error("G4 calibration failed for prompt_id=%s: %s", prompt_id, exc)
     scores["calibration"] = calibration_per_prompt
 
+    # Build threshold check from the modules that produce gate-able scores.
+    # Calibration is per-prompt, so run it through the same path as G1-G3.
+    threshold_check = _evaluate_group_thresholds(calibration_per_prompt, cfg)
+
+    # Regression gate: any regression_count > 0 is a failure.
+    reg = scores.get("regression", {})
+    regression_count = reg.get("regression_count", 0)
+    is_first_run = reg.get("is_first_run", True)
+    if not is_first_run and regression_count > 0:
+        threshold_check["passed"] = False
+        threshold_check["checks"].append({
+            "metric": "regression_count",
+            "value": regression_count,
+            "threshold": 0,
+            "passed": False,
+        })
+        threshold_check["checked_count"] = threshold_check.get("checked_count", 0) + 1
+
     return {
         "summary": scores,
-        "by_prompt": {},
+        "by_prompt": calibration_per_prompt,
         "prompt_count": len(all_results),
-        "threshold_check": {"passed": True, "checks": [], "checked_count": 0},
+        "threshold_check": threshold_check,
     }
 
 

@@ -171,6 +171,7 @@ def call_agent(
     tool_calls = _parse_tool_calls(body.get("tool_calls", []))
     reasoning_trace: str = body.get("reasoning_trace", "")
     metadata: dict[str, Any] = body.get("metadata", {})
+    metadata.setdefault("prompt_text", prompt_text)
 
     result = RunResult(
         prompt_id=prompt_id,

@@ -21,8 +21,7 @@ from agent.schema import RunResult
 
 logger = logging.getLogger(__name__)
 
-# BERTScore model — rescale_with_baseline improves human correlation.
-_BERT_MODEL = "distilbert-base-uncased"
+_DEFAULT_BERT_MODEL = "distilbert-base-uncased"
 
 
 def compute(results: list[RunResult], cfg: dict[str, Any]) -> dict[str, Any]:
@@ -71,10 +70,11 @@ def compute(results: list[RunResult], cfg: dict[str, Any]) -> dict[str, Any]:
     )
 
     try:
+        model: str = cfg.get("embeddings", {}).get("model", _DEFAULT_BERT_MODEL)
         precision_t, recall_t, f1_t = bert_score_fn(
             candidates,
             references,
-            model_type=_BERT_MODEL,
+            model_type=model,
             lang="en",
             rescale_with_baseline=True,
             verbose=False,

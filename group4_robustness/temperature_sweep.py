@@ -150,10 +150,8 @@ def compute(results: list[RunResult], cfg: dict[str, Any]) -> dict[str, Any]:
         r.prompt_id: r.text for r in results if r.run_index == 0
     }
 
-    # We also need prompt texts — stored in metadata.prompt_text if available,
-    # otherwise re-use the text field (caller should populate metadata.prompt_text)
     prompt_text_map: dict[str, str] = {
-        r.prompt_id: r.metadata.get("prompt_text", r.text)
+        r.prompt_id: r.metadata.get("prompt_text", "")
         for r in results if r.run_index == 0
     }
 
