@@ -70,7 +70,7 @@ def compute(results: list[RunResult], cfg: dict[str, Any]) -> dict[str, Any]:
     )
 
     try:
-        model: str = cfg.get("embeddings", {}).get("model", _DEFAULT_BERT_MODEL)
+        model: str = cfg.get("embeddings", {}).get("bert_score_model", _DEFAULT_BERT_MODEL)
         precision_t, recall_t, f1_t = bert_score_fn(
             candidates,
             references,

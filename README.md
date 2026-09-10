@@ -170,6 +170,7 @@ groups:
 
 embeddings:
   model: "sentence-transformers/all-MiniLM-L6-v2"
+  bert_score_model: "distilbert-base-uncased"  # BERTScore encoder (separate from embedding model)
   cache: true                              # Skip re-embedding unchanged outputs
 
 thresholds:
