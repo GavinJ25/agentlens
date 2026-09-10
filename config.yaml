@@ -1,0 +1,32 @@
+agent:
+  endpoint: "https://your-agent/api/chat"
+  api_key_env: "AGENT_API_KEY"       # name of env var, never the key itself
+  timeout_s: 30
+  extra_headers: {}
+
+runs:
+  n: 20                              # number of runs per prompt
+  temperature: 0.0
+  parallel: 4                        # concurrent workers
+
+groups:
+  g1_text: true
+  g2_embeddings: true
+  g3_structured: true
+  g4_robustness: false               # opt-in, runs separately
+
+embeddings:
+  model: "sentence-transformers/all-MiniLM-L6-v2"
+  cache: true
+
+thresholds:
+  rouge_l: 0.85
+  bert_score_f1: 0.90
+  exact_match_rate: 0.70
+  cosine_sim: 0.92
+  tool_seq_match: 0.80
+
+output:
+  dir: "outputs/"
+  format: "json"                     # json | html | both
+  fail_fast: false
