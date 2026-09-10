@@ -89,7 +89,7 @@ def _parse_tool_calls(raw: list[dict[str, Any]]) -> list[ToolCall]:
                 )
             )
         except (KeyError, TypeError) as exc:
-            logger.warning("Skipping malformed tool call entry %s: %s", item, exc)
+            logger.warning("Skipping malformed tool call entry: %s", type(exc).__name__)
     return calls
 
 

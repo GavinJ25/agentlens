@@ -82,7 +82,7 @@ def _run_group1(
                     "G1 metric %s failed for prompt_id=%s: %s",
                     module.__name__, prompt_id, exc,
                 )
-                errors.append({"module": module.__name__, "error": str(exc)})
+                errors.append({"module": module.__name__, "error": type(exc).__name__})
         if errors:
             scores["_errors"] = errors
         per_prompt[prompt_id] = scores
@@ -120,7 +120,7 @@ def _run_group2(
                     "G2 metric %s failed for prompt_id=%s: %s",
                     module.__name__, prompt_id, exc,
                 )
-                errors.append({"module": module.__name__, "error": str(exc)})
+                errors.append({"module": module.__name__, "error": type(exc).__name__})
         if errors:
             scores["_errors"] = errors
         per_prompt[prompt_id] = scores
@@ -162,7 +162,7 @@ def _run_group3(
                     "G3 metric %s failed for prompt_id=%s: %s",
                     module.__name__, prompt_id, exc,
                 )
-                errors.append({"module": module.__name__, "error": str(exc)})
+                errors.append({"module": module.__name__, "error": type(exc).__name__})
         if errors:
             scores["_errors"] = errors
         per_prompt[prompt_id] = scores
@@ -202,25 +202,25 @@ def _run_group4(
         scores["prompt_perturbation"] = prompt_perturbation.compute(flat_results, cfg)
     except Exception as exc:
         logger.error("G4 prompt_perturbation failed: %s", exc)
-        errors.append({"module": "prompt_perturbation", "error": str(exc)})
+        errors.append({"module": "prompt_perturbation", "error": type(exc).__name__})
 
     try:
         scores["temperature_sweep"] = temperature_sweep.compute(flat_results, cfg)
     except Exception as exc:
         logger.error("G4 temperature_sweep failed: %s", exc)
-        errors.append({"module": "temperature_sweep", "error": str(exc)})
+        errors.append({"module": "temperature_sweep", "error": type(exc).__name__})
 
     try:
         scores["context_stress"] = context_stress.compute(flat_results, cfg)
     except Exception as exc:
         logger.error("G4 context_stress failed: %s", exc)
-        errors.append({"module": "context_stress", "error": str(exc)})
+        errors.append({"module": "context_stress", "error": type(exc).__name__})
 
     try:
         scores["regression"] = regression.compute(flat_results, cfg)
     except Exception as exc:
         logger.error("G4 regression failed: %s", exc)
-        errors.append({"module": "regression", "error": str(exc)})
+        errors.append({"module": "regression", "error": type(exc).__name__})
 
     # Calibration runs per-prompt like G1-G3
     calibration_per_prompt: dict[str, Any] = {}
@@ -229,7 +229,7 @@ def _run_group4(
             calibration_per_prompt[prompt_id] = calibration.compute(results, cfg)
         except Exception as exc:
             logger.error("G4 calibration failed for prompt_id=%s: %s", prompt_id, exc)
-            errors.append({"module": "calibration", "error": f"{prompt_id}: {exc}"})
+            errors.append({"module": "calibration", "error": f"{prompt_id}: {type(exc).__name__}"})
     scores["calibration"] = calibration_per_prompt
 
     if errors:
