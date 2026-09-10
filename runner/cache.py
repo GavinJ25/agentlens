@@ -132,7 +132,7 @@ def load_all_runs(prompt_id: str, cfg: dict[str, Any]) -> list[RunResult]:
         if is_cached(prompt_id, i, cfg):
             try:
                 results.append(load_run(prompt_id, i, cfg))
-            except (ValueError, Exception) as exc:
+            except Exception as exc:
                 logger.warning(
                     "Failed to load run %s index %d: %s", prompt_id, i, exc
                 )
