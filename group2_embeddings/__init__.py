@@ -1,0 +1,1 @@
+"""Group 2 — embedding-based determinacy metrics computed from cached vectors."""
