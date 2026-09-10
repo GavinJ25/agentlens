@@ -1,0 +1,1 @@
+"""Group 1 — text-based determinacy metrics computed from raw RunResult outputs."""
