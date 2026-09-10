@@ -50,19 +50,20 @@ def _get_model(model_name: str) -> SentenceTransformer:
     return _model
 
 
-def _run_hash(result: RunResult) -> str:
+def _run_hash(result: RunResult, model_name: str) -> str:
     """
-    Derive a stable cache key from a RunResult's prompt_id, run_index,
-    and text content.
+    Derive a stable cache key from the embedding model name and a
+    RunResult's prompt_id, run_index, and text content.
 
     Args:
-        result: RunResult instance to hash.
+        result:     RunResult instance to hash.
+        model_name: Embedding model identifier from config.
 
     Returns:
         16-character hex prefix of the SHA-256 digest — sufficient for
         cache key uniqueness within a test suite run.
     """
-    payload = f"{result.prompt_id}:{result.run_index}:{result.text}"
+    payload = f"{model_name}:{result.prompt_id}:{result.run_index}:{result.text}"
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 
 
@@ -96,15 +97,14 @@ def embed_run(result: RunResult, cfg: dict[str, Any]) -> np.ndarray:
     emb_dir = _embeddings_dir(cfg)
     emb_dir.mkdir(parents=True, exist_ok=True)
 
+    model_name: str = cfg["embeddings"]["model"]
     cache_enabled: bool = cfg["embeddings"].get("cache", True)
-    run_key = _run_hash(result)
+    run_key = _run_hash(result, model_name)
     cache_path = emb_dir / f"{run_key}.npy"
 
     if cache_enabled and cache_path.exists():
         logger.debug("Embedding cache hit: %s", cache_path)
         return np.load(str(cache_path))
-
-    model_name: str = cfg["embeddings"]["model"]
     model = _get_model(model_name)
 
     vector: np.ndarray = model.encode(
