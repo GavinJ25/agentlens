@@ -178,6 +178,13 @@ thresholds:
   exact_match_rate: 0.70                   # Min fraction of identical outputs
   cosine_sim: 0.92                         # Min mean pairwise cosine similarity
   tool_seq_match: 0.80                     # Min tool call sequence match rate
+  ece: 0.15                                # Max Expected Calibration Error
+  brier_score: 0.25                        # Max Brier score
+  accuracy_mean: 0.70                      # Min fraction of runs matching reference
+  coverage: 0.50                           # Min fraction of runs with confidence signal
+  lower_is_better:                         # Metrics where value must be ≤ cutoff
+    - ece
+    - brier_score
 
 output:
   dir: "outputs/"

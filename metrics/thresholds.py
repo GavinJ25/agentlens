@@ -3,8 +3,9 @@ Pass/fail threshold evaluation.
 
 Reads cutoff values from config.yaml under the thresholds section and
 evaluates a group's score dict against them. A score "passes" if its
-value meets or exceeds the configured threshold for metrics where higher
-is better (the only orientation used across this suite — see config.yaml).
+value meets or exceeds the configured threshold (higher is better) by
+default. Metrics listed under thresholds.lower_is_better use the
+opposite direction: the value must be at or below the cutoff to pass.
 """
 
 import logging
@@ -15,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 def get_thresholds(cfg: dict[str, Any]) -> dict[str, float]:
     """
-    Return the thresholds dict from config.
+    Return the thresholds dict from config, excluding non-threshold keys.
 
     Args:
         cfg: Full config dict loaded from config.yaml.
@@ -24,7 +25,8 @@ def get_thresholds(cfg: dict[str, Any]) -> dict[str, float]:
         Dict mapping threshold name to cutoff float, e.g.
         {"rouge_l": 0.85, "bert_score_f1": 0.90, ...}.
     """
-    return dict(cfg.get("thresholds", {}))
+    raw = cfg.get("thresholds", {})
+    return {k: v for k, v in raw.items() if isinstance(v, (int, float))}
 
 
 def evaluate(scores: dict[str, Any], cfg: dict[str, Any]) -> dict[str, Any]:
@@ -48,6 +50,7 @@ def evaluate(scores: dict[str, Any], cfg: dict[str, Any]) -> dict[str, Any]:
           - ``checked_count`` (int): number of metrics evaluated
     """
     thresholds = get_thresholds(cfg)
+    lower_is_better: set[str] = set(cfg.get("thresholds", {}).get("lower_is_better", []))
     checks: list[dict[str, Any]] = []
 
     for metric_name, cutoff in thresholds.items():
@@ -60,7 +63,10 @@ def evaluate(scores: dict[str, Any], cfg: dict[str, Any]) -> dict[str, Any]:
                 metric_name, value,
             )
             continue
-        passed = value >= cutoff
+        if metric_name in lower_is_better:
+            passed = value <= cutoff
+        else:
+            passed = value >= cutoff
         checks.append({
             "metric": metric_name,
             "value": round(float(value), 6),
@@ -68,9 +74,10 @@ def evaluate(scores: dict[str, Any], cfg: dict[str, Any]) -> dict[str, Any]:
             "passed": passed,
         })
         if not passed:
+            direction = "<=" if metric_name in lower_is_better else ">="
             logger.warning(
-                "Threshold FAILED | %s = %.4f < %.4f",
-                metric_name, value, cutoff,
+                "Threshold FAILED | %s = %.4f (need %s %.4f)",
+                metric_name, value, direction, cutoff,
             )
 
     result = {
