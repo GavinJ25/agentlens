@@ -1,0 +1,1 @@
+"""Group 3 — structured determinacy metrics from tool logs and reasoning traces."""
