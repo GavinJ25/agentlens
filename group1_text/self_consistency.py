@@ -70,7 +70,7 @@ def _assign_clusters(texts: list[str], threshold: float = 0.85) -> list[int]:
     Returns:
         List of integer cluster IDs, one per text, in input order.
     """
-    sc = rouge_scorer.RougeScorer(["rougeL"], use_stemmer=False)
+    sc = rouge_scorer.RougeScorer(["rougeL"], use_stemmer=True)
     cluster_reps: list[str] = []
     assignments: list[int] = []
 
