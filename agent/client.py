@@ -103,8 +103,8 @@ def call_agent(
     Send one prompt to the configured agent endpoint and return a RunResult.
 
     This is the only function in the suite that makes outbound HTTP calls
-    to the agent under test. All test groups read from cached RunResult
-    objects — they never call this function directly.
+    to the agent under test. G1-G3 groups read from cached RunResult
+    objects; G4 robustness modules call this function directly.
 
     The agent response body is expected to be JSON with this shape
     (all fields except 'text' are optional):

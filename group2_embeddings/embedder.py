@@ -1,7 +1,7 @@
 """
 Embedding cache for the agent determinacy test suite.
 
-Loads the sentence-transformer model once per process, embeds all RunResult
+Loads the sentence-transformer model once per model name per process, embeds all RunResult
 text outputs, and persists each vector to outputs/embeddings/{run_hash}.npy.
 Subsequent calls for the same run hash return the cached array directly
 without re-running the model.
