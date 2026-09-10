@@ -72,6 +72,7 @@ def _run_group1(
     per_prompt: dict[str, dict[str, Any]] = {}
     for prompt_id, results in all_results.items():
         scores: dict[str, Any] = {}
+        errors: list[dict[str, str]] = []
         for module in (rouge, bleu_meteor, exact_match,
                        length_variance, format_fingerprint, self_consistency):
             try:
@@ -81,6 +82,9 @@ def _run_group1(
                     "G1 metric %s failed for prompt_id=%s: %s",
                     module.__name__, prompt_id, exc,
                 )
+                errors.append({"module": module.__name__, "error": str(exc)})
+        if errors:
+            scores["_errors"] = errors
         per_prompt[prompt_id] = scores
 
     aggregated = aggregate_group(per_prompt)
@@ -107,6 +111,7 @@ def _run_group2(
     per_prompt: dict[str, dict[str, Any]] = {}
     for prompt_id, results in all_results.items():
         scores: dict[str, Any] = {}
+        errors: list[dict[str, str]] = []
         for module in (cosine_sim, bert_score, semantic_entropy):
             try:
                 scores.update(module.compute(results, cfg))
@@ -115,6 +120,9 @@ def _run_group2(
                     "G2 metric %s failed for prompt_id=%s: %s",
                     module.__name__, prompt_id, exc,
                 )
+                errors.append({"module": module.__name__, "error": str(exc)})
+        if errors:
+            scores["_errors"] = errors
         per_prompt[prompt_id] = scores
 
     aggregated = aggregate_group(per_prompt)
@@ -144,6 +152,7 @@ def _run_group3(
     per_prompt: dict[str, dict[str, Any]] = {}
     for prompt_id, results in all_results.items():
         scores: dict[str, Any] = {}
+        errors: list[dict[str, str]] = []
         for module in (schema_validator, tool_sequence, decision_path,
                        reasoning_steps, memory_stability):
             try:
@@ -153,6 +162,9 @@ def _run_group3(
                     "G3 metric %s failed for prompt_id=%s: %s",
                     module.__name__, prompt_id, exc,
                 )
+                errors.append({"module": module.__name__, "error": str(exc)})
+        if errors:
+            scores["_errors"] = errors
         per_prompt[prompt_id] = scores
 
     aggregated = aggregate_group(per_prompt)
@@ -184,26 +196,31 @@ def _run_group4(
 
     flat_results = [r for results in all_results.values() for r in results]
     scores: dict[str, Any] = {}
+    errors: list[dict[str, str]] = []
 
     try:
         scores["prompt_perturbation"] = prompt_perturbation.compute(flat_results, cfg)
     except Exception as exc:
         logger.error("G4 prompt_perturbation failed: %s", exc)
+        errors.append({"module": "prompt_perturbation", "error": str(exc)})
 
     try:
         scores["temperature_sweep"] = temperature_sweep.compute(flat_results, cfg)
     except Exception as exc:
         logger.error("G4 temperature_sweep failed: %s", exc)
+        errors.append({"module": "temperature_sweep", "error": str(exc)})
 
     try:
         scores["context_stress"] = context_stress.compute(flat_results, cfg)
     except Exception as exc:
         logger.error("G4 context_stress failed: %s", exc)
+        errors.append({"module": "context_stress", "error": str(exc)})
 
     try:
         scores["regression"] = regression.compute(flat_results, cfg)
     except Exception as exc:
         logger.error("G4 regression failed: %s", exc)
+        errors.append({"module": "regression", "error": str(exc)})
 
     # Calibration runs per-prompt like G1-G3
     calibration_per_prompt: dict[str, Any] = {}
@@ -212,7 +229,11 @@ def _run_group4(
             calibration_per_prompt[prompt_id] = calibration.compute(results, cfg)
         except Exception as exc:
             logger.error("G4 calibration failed for prompt_id=%s: %s", prompt_id, exc)
+            errors.append({"module": "calibration", "error": f"{prompt_id}: {exc}"})
     scores["calibration"] = calibration_per_prompt
+
+    if errors:
+        scores["_errors"] = errors
 
     # Build threshold check from the modules that produce gate-able scores.
     # Calibration is per-prompt, so run it through the same path as G1-G3.
