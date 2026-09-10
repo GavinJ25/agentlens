@@ -1,0 +1,47 @@
+{
+  "summarize_policy": {
+    "original": "Summarize the following refund policy in three sentences: Customers may return unopened items within 30 days of purchase for a full refund. Opened items are eligible for store credit only, valid for 12 months. Items marked final sale cannot be returned under any circumstances.",
+    "variants": [
+      "In three sentences, provide a summary of this returns policy: Unopened products can be sent back within a month of buying for a complete refund. If the packaging has been opened, only store credit is given, and it stays valid for one year. Any product labelled as a final sale is non-returnable.",
+      "Please condense the following return policy into three sentences: A full refund is available for unopened items returned within 30 days. Store credit lasting 12 months is the only option for opened items. Final sale items are excluded from all returns.",
+      "Summarise this policy in 3 sentences — Refund policy: returns of sealed goods within thirty days get a full refund; opened goods get store credit valid for a year; items sold as final sale are not eligible for return under any condition.",
+      "Can you give me a three-sentence summary of the following? Our policy allows full refunds on unopened returns within 30 days of purchase. Once opened, items may only be exchanged for store credit, which expires after 12 months. Products designated as final sale are strictly non-refundable."
+    ]
+  },
+  "classify_intent": {
+    "original": "Classify the user's intent in this message as one of: complaint, question, praise, request. Message: 'I've been waiting two weeks for a response and nobody has helped me yet.'",
+    "variants": [
+      "Label the intent behind this message as complaint, question, praise, or request: 'It has been two weeks and I still haven't heard back from anyone on my issue.'",
+      "What is the intent of the following message? Choose from: complaint, question, praise, request. Message: 'Two weeks have passed and no one has gotten back to me yet.'",
+      "Identify whether this message is a complaint, question, praise, or request: 'Nobody has responded to me in over two weeks and I still need help.'",
+      "Categorise this user message as one of complaint / question / praise / request: 'I submitted my issue two weeks ago and have received zero responses from your team.'"
+    ]
+  },
+  "extract_entities": {
+    "original": "Extract all person names, organizations, and dates mentioned in this text: 'Maria Chen joined Initech on March 3rd, 2024, after leaving her role at Globex Corporation.'",
+    "variants": [
+      "From the following text, pull out any person names, company names, and dates that appear: 'After departing from Globex Corporation, Maria Chen started at Initech on the 3rd of March, 2024.'",
+      "Identify and list all people, organisations, and dates in this sentence: 'On March 3rd 2024 Maria Chen moved from Globex Corporation to a new position at Initech.'",
+      "Please extract every mention of a person, an organisation, and a date from this text: 'Maria Chen's last day at Globex Corporation was before her joining date at Initech, which was March 3rd, 2024.'",
+      "Find all named people, named organisations, and dates in the text below: 'Initech welcomed Maria Chen on March 3rd, 2024, who had previously worked at Globex Corporation.'"
+    ]
+  },
+  "multi_step_calculation": {
+    "original": "A store had 240 units of inventory. They sold 35% in week one, then restocked 50 units, then sold 20% of the new total in week two. How many units remain?",
+    "variants": [
+      "A shop started with 240 items in stock. During the first week, 35 percent of the stock was sold. Afterwards, 50 more units were added. In the second week, 20 percent of the updated stock was sold. What is the remaining stock count?",
+      "Inventory problem: begin with 240 units. Sell 35% in week 1. Add 50 units. Then sell 20% of whatever is left. How many units do you end up with?",
+      "Start: 240 units. Week 1: sell 35% of stock. Restock: add 50 units. Week 2: sell 20% of current stock. Final inventory?",
+      "A retailer has 240 units. In the first week they moved 35% of inventory. They then received a shipment of 50 units. The following week they sold a fifth of their current stock. How many units are left after both weeks?"
+    ]
+  },
+  "tool_use_lookup": {
+    "original": "Look up the current weather in Tokyo and tell me if I should bring an umbrella tomorrow.",
+    "variants": [
+      "Check what the weather is like in Tokyo right now and let me know whether an umbrella will be needed tomorrow.",
+      "What is the current weather in Tokyo? Based on that, should I carry an umbrella tomorrow?",
+      "Can you look up Tokyo's weather and advise me on whether to bring an umbrella for tomorrow?",
+      "Search for today's weather in Tokyo and give me a recommendation on whether I need an umbrella tomorrow."
+    ]
+  }
+}

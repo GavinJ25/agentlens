@@ -1,0 +1,7 @@
+{
+  "summarize_policy": "Summarize the following refund policy in three sentences: Customers may return unopened items within 30 days of purchase for a full refund. Opened items are eligible for store credit only, valid for 12 months. Items marked final sale cannot be returned under any circumstances.",
+  "classify_intent": "Classify the user's intent in this message as one of: complaint, question, praise, request. Message: 'I've been waiting two weeks for a response and nobody has helped me yet.'",
+  "extract_entities": "Extract all person names, organizations, and dates mentioned in this text: 'Maria Chen joined Initech on March 3rd, 2024, after leaving her role at Globex Corporation.'",
+  "multi_step_calculation": "A store had 240 units of inventory. They sold 35% in week one, then restocked 50 units, then sold 20% of the new total in week two. How many units remain?",
+  "tool_use_lookup": "Look up the current weather in Tokyo and tell me if I should bring an umbrella tomorrow."
+}
