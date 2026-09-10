@@ -1,0 +1,1 @@
+"""Agent package — client and shared RunResult schema."""
